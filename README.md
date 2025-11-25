@@ -1,5 +1,24 @@
 # Docker Monitoring System with Prometheus and Grafana
 
+## Table of Contents
+
+- [English](#english)
+  - [Introduction](#introduction)
+  - [Installation Guide](#installation-guide)
+  - [Usage Guide](#usage-guide)
+  - [Directory Structure](#directory-structure)
+  - [Troubleshooting](#troubleshooting)
+  - [Performance Tuning](#performance-tuning)
+  - [Security Best Practices](#security-best-practices)
+  - [Extensions](#extensions)
+  - [References](#references)
+  - [Author](#author)
+- [Tiếng Việt](#tiếng-việt)
+
+---
+
+## English Version
+
 ## Introduction
 
 This is a complete monitoring system for Docker containers and host systems using modern monitoring stack. The system includes:
@@ -66,24 +85,7 @@ receivers:
 - For Outlook/Microsoft 365, you need to create an App Password instead of using your regular password
 - Access: https://account.microsoft.com/security → App passwords
 
-#### 3. Fix typo in docker-compose.yml
-
-The `docker-compose.yml` file has a typo in the postgres image:
-
-```yaml
-# Wrong: postgres:lastest
-# Correct: postgres:latest
-```
-
-Change to:
-
-```yaml
-services:
-  postgres:
-    image: postgres:latest  
-```
-
-#### 4. Start the monitoring system
+#### 3. Start the monitoring system
 
 ```bash
 # Start all services
@@ -93,13 +95,13 @@ docker-compose -f docker-compose.monitoring.yml up -d
 docker-compose -f docker-compose.monitoring.yml ps
 ```
 
-#### 5. Start PostgreSQL service (if needed)
+#### 4. Start PostgreSQL service (if needed)
 
 ```bash
 docker-compose -f docker-compose.yml up -d
 ```
 
-#### 6. Verify services are running
+#### 5. Verify services are running
 
 ```bash
 docker ps
@@ -434,8 +436,7 @@ scrape_configs:
 **Project**: Docker Monitoring System  
 **Version**: 1.0  
 **Date**: November 2025  
-**Contact**: [Add your contact information]  
-**License**: [Add license if needed]
+**Contact**: tuannguyen.02042005@gmail.com
 
 ---
 
@@ -480,7 +481,25 @@ If you encounter issues or have questions:
 ---
 ---
 
+## Tiếng Việt
+
 # Hệ Thống Giám Sát Docker với Prometheus và Grafana
+
+## Mục Lục
+
+- [Giới Thiệu](#giới-thiệu)
+- [Hướng Dẫn Cài Đặt](#hướng-dẫn-cài-đặt)
+- [Hướng Dẫn Sử Dụng](#hướng-dẫn-sử-dụng)
+- [Cấu Trúc Thư Mục](#cấu-trúc-thư-mục)
+- [Troubleshooting](#troubleshooting)
+- [Performance Tuning](#performance-tuning)
+- [Security Best Practices](#security-best-practices)
+- [Mở Rộng](#mở-rộng)
+- [Tài Liệu Tham Khảo](#tài-liệu-tham-khảo)
+- [Tác Giả](#tác-giả)
+- [Back to English Version](#english-version)
+
+---
 
 ## Giới Thiệu
 
@@ -548,24 +567,7 @@ receivers:
 - Đối với Outlook/Microsoft 365, bạn cần tạo App Password thay vì dùng mật khẩu thường
 - Truy cập: https://account.microsoft.com/security → App passwords
 
-#### 3. Sửa lỗi typo trong docker-compose.yml
-
-File `docker-compose.yml` có lỗi chính tả trong image postgres:
-
-```yaml
-# Sai: postgres:lastest
-# Đúng: postgres:latest
-```
-
-Sửa thành:
-
-```yaml
-services:
-  postgres:
-    image: postgres:latest  
-```
-
-#### 4. Khởi động hệ thống monitoring
+#### 3. Khởi động hệ thống monitoring
 
 ```bash
 # Khởi động tất cả services
@@ -575,13 +577,13 @@ docker-compose -f docker-compose.monitoring.yml up -d
 docker-compose -f docker-compose.monitoring.yml ps
 ```
 
-#### 5. Khởi động service PostgreSQL (nếu cần)
+#### 4. Khởi động service PostgreSQL (nếu cần)
 
 ```bash
 docker-compose -f docker-compose.yml up -d
 ```
 
-#### 6. Xác nhận các services đã chạy
+#### 5. Xác nhận các services đã chạy
 
 ```bash
 docker ps
@@ -916,8 +918,7 @@ scrape_configs:
 **Project**: Docker Monitoring System  
 **Version**: 1.0  
 **Date**: November 2025  
-**Contact**: [Thêm thông tin liên hệ của bạn]  
-**License**: [Thêm license nếu cần]
+**Contact**: tuannguyen.02042005@gmail.com
 
 ---
 
