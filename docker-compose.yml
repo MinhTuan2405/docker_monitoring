@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:latest  
+    container_name: postgres
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin123"
+      POSTGRES_DB: "testing"
+    restart: on-failure
+    
+    mem_limit: 7g
+    mem_reservation: 4g
+    cpus: 4
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data 

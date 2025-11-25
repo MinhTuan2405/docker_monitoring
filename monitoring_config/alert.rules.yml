@@ -1,0 +1,34 @@
+groups:
+  - name: node-exporter-alerts
+    rules:
+      # Alert khi instance (job) down
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} is down"
+          description: "Job {{ $labels.job }} on instance {{ $labels.instance }} has been down for more than 1 minute."
+
+      # Alert CPU cao (trung bình theo instance > 90% trong 5m)
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage > 90% for more than 5 minutes."
+
+      # Alert disk còn ít (disk_available < 10%)
+      - alert: LowDiskSpace
+        expr: (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"}) * 100 < 10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "Disk space available is less than 10% for more than 10 minutes."
+
+

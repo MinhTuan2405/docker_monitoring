@@ -1,0 +1,33 @@
+global:
+  resolve_timeout: 5m
+
+  # Cấu hình SMTP để gửi email qua Outlook / Microsoft 365
+  # TODO: THAY THÔNG TIN NÀY CHO PHÙ HỢP VỚI TỔ CHỨC CỦA BẠN
+  smtp_smarthost: 'smtp.office365.com:587'
+  smtp_from: 'app-alert@yourcompany.com'
+  smtp_auth_username: 'app-alert@yourcompany.com'
+  smtp_auth_password: 'YOUR_OUTLOOK_APP_PASSWORD'
+  smtp_require_tls: true
+
+
+route:
+  receiver: 'email-alerts'
+  group_by: ['alertname', 'instance']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: 'email-alerts'
+    email_configs:
+      - to: 'user1@yourcompany.com,user2@yourcompany.com'
+        send_resolved: true
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance']
+
+
