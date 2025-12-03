@@ -83,9 +83,25 @@ services:
     ports:
       - "9101:9100"
     volumes:
-      - /:/host:ro,rslave
+      - /:/host:ro
     networks:
       - monitoring
+    restart: unless-stopped
+
+
+  # FastAPI - Alert Webhook Server with Snowflake Email
+  fastapi:
+    build: ./app
+    container_name: fastapi-alert-server
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./app/.env
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+      - grafana
     restart: unless-stopped
 
 networks:
