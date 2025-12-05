@@ -14,6 +14,7 @@ alerting:
 # Load rules once and periodically evaluate them
 rule_files:
   - "alert.rules.yml"
+  - "storage_alert.rules.yml"
 
 # A scrape configuration containing exactly one endpoint to scrape
 scrape_configs:

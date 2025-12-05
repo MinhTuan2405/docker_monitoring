@@ -14,6 +14,7 @@ services:
     volumes:
       - ./monitoring_config/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./monitoring_config/alert.rules.yml:/etc/prometheus/alert.rules.yml
+      - ./monitoring_config/storage_alert.rules.yml:/etc/prometheus/storage_alert.rules.yml
       - ./data/prometheus:/prometheus
     networks:
       - monitoring
@@ -80,10 +81,12 @@ services:
     container_name: node-exporter
     command:
       - '--path.rootfs=/host'
+      - '--collector.textfile.directory=/textfile_collector'
     ports:
       - "9101:9100"
     volumes:
       - /:/host:ro
+      - /var/lib/node_exporter/textfile_collector:/textfile_collector:ro
     networks:
       - monitoring
     restart: unless-stopped
