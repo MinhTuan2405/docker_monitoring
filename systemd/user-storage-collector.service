@@ -1,0 +1,13 @@
+[Unit]
+Description=Collect User Storage Metrics
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/collect_user_storage.sh
+ExecStart=/usr/local/bin/collect_user_subfolders.sh
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

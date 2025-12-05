@@ -1,0 +1,11 @@
+[Unit]
+Description=Run User Storage Collector every 5 minutes
+Requires=user-storage-collector.service
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

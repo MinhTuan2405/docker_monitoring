@@ -13,6 +13,15 @@ receivers:
     webhook_configs:
       - url: 'http://fastapi-alert-server:8000/webhook/grafana'
         send_resolved: false
+  
+  - name: 'email-alerts'
+    email_configs:
+      - to: 'tuannguyen.02042005@gmail.com'
+        from: 'alertmanager@docker-monitoring.local'
+        smarthost: 'smtp.gmail.com:587'
+        auth_username: 'your-email@gmail.com'
+        auth_password: 'your-app-password'
+        require_tls: true
 
 inhibit_rules:
   - source_match:

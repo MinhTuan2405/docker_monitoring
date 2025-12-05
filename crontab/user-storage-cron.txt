@@ -1,0 +1,5 @@
+# Crontab entry để chạy scripts thu thập storage metrics
+# Chạy mỗi 5 phút
+
+*/5 * * * * /usr/local/bin/collect_user_storage.sh >> /var/log/user_storage_collector.log 2>&1
+*/5 * * * * /usr/local/bin/collect_user_subfolders.sh >> /var/log/user_storage_collector.log 2>&1

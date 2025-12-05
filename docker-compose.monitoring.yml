@@ -14,7 +14,7 @@ services:
     volumes:
       - ./monitoring_config/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./monitoring_config/alert.rules.yml:/etc/prometheus/alert.rules.yml
-      - prometheus_data:/prometheus
+      - ./data/prometheus:/prometheus
     networks:
       - monitoring
     restart: unless-stopped
@@ -30,7 +30,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
-      - grafana_data:/var/lib/grafana
+      - ./data/grafana:/var/lib/grafana
       - ./monitoring_config/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
       - ./monitoring_config/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
     networks:
@@ -47,7 +47,7 @@ services:
       - "9093:9093"
     volumes:
       - ./monitoring_config/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-      - alertmanager_data:/alertmanager
+      - ./data/alertmanager:/alertmanager
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
       - '--storage.path=/alertmanager'
@@ -91,12 +91,14 @@ services:
 
   # FastAPI - Alert Webhook Server with Snowflake Email
   fastapi:
-    build: ./app
+    build:
+      context: .
+      dockerfile: Dockerfile.webhook
     container_name: fastapi-alert-server
     ports:
       - "8000:8000"
     env_file:
-      - ./app/.env
+      - ./monitoring_config/app/.env
     networks:
       - monitoring
     depends_on:
@@ -107,11 +109,3 @@ services:
 networks:
   monitoring:
     driver: bridge
-
-volumes:
-  prometheus_data:
-    driver: local
-  grafana_data:
-    driver: local
-  alertmanager_data:
-    driver: local

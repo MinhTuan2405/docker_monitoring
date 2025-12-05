@@ -51,52 +51,53 @@ async def health_check():
 @app.post("/webhook/grafana")
 async def grafana_webhook(request: Request):
     """
-    Webhook endpoint for Grafana alerts
+    Webhook endpoint for Grafana/Alertmanager alerts
     Receives alert data and sends email via Snowflake
     """
     try:
         payload = await request.json()
         
-        # Extract alert information
-        title = payload.get("title", "Grafana Alert")
-        state = payload.get("state", "alerting")
-        message = payload.get("message", "No message provided")
-        rule_name = payload.get("ruleName", title)
-        rule_url = payload.get("ruleUrl", "")
-        
-        # Only send email for alerting state (skip "ok" state to avoid spam)
-        if state.lower() != "alerting":
-            return {
-                "status": "skipped",
-                "message": f"Email not sent for state: {state}"
-            }
-        
-        # Format email subject and body
-        email_subject = f"[ALERT] Docker Monitoring: {rule_name}"
-        
-        email_body = f"""
-Docker Monitoring Alert from Grafana
-=====================================
+        # Xử lý payload từ Alertmanager
+        if 'alerts' in payload:
+            # Alertmanager format
+            alerts = payload.get('alerts', [])
+            common_labels = payload.get('commonLabels', {})
+            common_annotations = payload.get('commonAnnotations', {})
+            
+            alert_name = common_labels.get('alertname', 'Unknown Alert')
+            instance = common_labels.get('instance', 'Unknown')
+            severity = common_labels.get('severity', 'warning')
+            job = common_labels.get('job', 'Unknown')
+            
+            # Tách IP từ instance (format: ip:port)
+            ip_address = instance.split(':')[0] if ':' in instance else instance
+            
+            summary = common_annotations.get('summary', 'No summary')
+            description = common_annotations.get('description', 'No description')
+            
+            # Đếm số alert đang firing
+            firing_count = len([a for a in alerts if a.get('status') == 'firing'])
+            
+            # Format email
+            email_subject = f"[{severity.upper()}] {alert_name} - {ip_address}"
+            
+            email_body = f"""
+Docker Monitoring Alert
+========================
 
-Status: {state.upper()}
-Alert: {rule_name}
-Message: {message}
+Summary:
+{summary}
 
-{"Dashboard: " + rule_url if rule_url else ""}
-
-Timestamp: {datetime.now().isoformat()}
+Description:
+{description}
 
 ---
-Full Alert Details:
-{payload}
-
----
-This is an automated message from Docker Monitoring System.
+This is an automated alert from Docker Monitoring System.
 Please review and address the issue.
 
-Regards,
-Monitoring Team
-        """
+Regard,
+Data Team
+"""
         
         # Send email via Snowflake
         success = send_snowflake_email(email_subject, email_body)
@@ -105,16 +106,12 @@ Monitoring Team
             return {
                 "status": "success",
                 "message": "Alert email sent via Snowflake",
-                "alert": rule_name,
-                "state": state,
                 "timestamp": datetime.now().isoformat()
             }
         else:
             return {
                 "status": "error",
                 "message": "Failed to send email via Snowflake",
-                "alert": rule_name,
-                "state": state,
                 "timestamp": datetime.now().isoformat()
             }
             

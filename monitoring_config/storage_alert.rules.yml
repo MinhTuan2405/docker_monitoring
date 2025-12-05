@@ -1,0 +1,43 @@
+groups:
+  - name: storage_alerts
+    interval: 30s
+    rules:
+      # Alert khi user workspace vượt quá 50GB
+      - alert: UserWorkspaceHighUsage
+        expr: user_workspace_bytes / 1024 / 1024 / 1024 > 50
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "User {{ $labels.user }} workspace usage is high"
+          description: "User {{ $labels.user }} at {{ $labels.path }} is using {{ $value | humanize }}GB (threshold: 50GB)"
+      
+      # Alert khi user workspace vượt quá 100GB
+      - alert: UserWorkspaceCriticalUsage
+        expr: user_workspace_bytes / 1024 / 1024 / 1024 > 100
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "User {{ $labels.user }} workspace usage is critical"
+          description: "User {{ $labels.user }} at {{ $labels.path }} is using {{ $value | humanize }}GB (threshold: 100GB)"
+      
+      # Alert khi subfolder vượt quá 10GB
+      - alert: UserSubfolderHighUsage
+        expr: user_subfolder_bytes / 1024 / 1024 / 1024 > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Subfolder {{ $labels.folder }} is using high storage"
+          description: "User {{ $labels.user }}'s folder {{ $labels.folder }} is using {{ $value | humanize }}GB (threshold: 10GB)"
+      
+      # Alert khi subfolder vượt quá 20GB
+      - alert: UserSubfolderCriticalUsage
+        expr: user_subfolder_bytes / 1024 / 1024 / 1024 > 20
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Subfolder {{ $labels.folder }} storage is critical"
+          description: "User {{ $labels.user }}'s folder {{ $labels.folder }} is using {{ $value | humanize }}GB (threshold: 20GB)"
